@@ -14,8 +14,9 @@ const app = express();
 
 app.use(express.json());
 
+// app.use("/todos",authenticate, todoRoutes);
 
-app.use("/todos",authenticate, todoRoutes);
+app.use("/todos", todoRoutes);
 app.use("/auth", authRouter);
 
 app.get("/", async (_req: Request, res: Response) => {

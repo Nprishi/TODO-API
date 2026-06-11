@@ -5,10 +5,19 @@ import {
   createTodo as createTodoService,
   getTodoById as getTodoByIdService,
 } from "./todo.service.ts";
+import { getCache } from "../cache/cache.service.ts";
+import { setCache } from "../cache/cache.service.ts";
 
 export const getTodos = async (_req: Request, res: Response) => {
   try {
+    const CASHE_TTL = 300;
+
+    const cachedTodos = await getCache("todos");
+    if (cachedTodos) {
+      return res.json(cachedTodos);
+    }
     const todos = await getTodoService();
+    await setCache("todos", todos, CASHE_TTL);
     res.json(todos);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
